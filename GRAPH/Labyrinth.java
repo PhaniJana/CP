@@ -1,6 +1,7 @@
 import java.util.*;
 public class Labyrinth {
     static int[][] dir = {{1,0},{0,1},{-1,0},{0,-1}};
+    static char[] dirC = {'D','R','U','L'};
     private static int[] FindA(String[] grid,int n,int m){
         for(int i=0;i<n;i++){
             for(int j=0;j<m;j++){
@@ -13,33 +14,44 @@ public class Labyrinth {
     }
 
     private static String bfs(int sr,int sc,String[] grid,int n,int m){
-        Queue<Pair> q = new LinkedList<>();
+        int endR=-1,endC=-1;
+        Queue<int[]> q = new LinkedList<>();
         boolean[][] vis = new boolean[n][m];
+        char[][] parent = new char[n][m];
         vis[sr][sc] = true;
-        q.add(new Pair(sr,sc,""));
+        q.add(new int[]{sr,sc});
         while(!q.isEmpty()){
-            int r = q.peek().r;
-            int c = q.peek().c;
-            String s = q.peek().s;
+            int r = q.peek()[0];
+            int c = q.peek()[1];
             q.poll();
-            if(grid[r].charAt(c)=='B') return s;
+            if(grid[r].charAt(c)=='B'){
+                endR = r;
+                endC = c;
+                break;
+            }
             for(int i=0;i<4;i++){
                 int nr = r + dir[i][0];
                 int nc = c + dir[i][1];
                 if(nr>=0 && nr<n && nc>=0 && nc<m){
                     if(!vis[nr][nc] && grid[nr].charAt(nc)!='#'){
-                        String ns = s;
-                        if(i == 0) ns +="D";
-                        else if(i==1) ns += "R";
-                        else if(i==2) ns += "U";
-                        else ns += "L";
-                        q.add(new Pair(nr,nc,ns));
+                        vis[nr][nc] = true;
+                        parent[nr][nc] = dirC[i];
+                        q.add(new int[]{nr,nc});
                     }
                 }
             }
-
         }
-        return "";
+        if(endR==-1) return "";
+        StringBuilder sb = new StringBuilder();
+        while(endR!=sr || endC!=sc){
+            sb.append(parent[endR][endC]);
+            char c = parent[endR][endC];
+            if(c=='D') endR--;
+            else if(c=='U') endR++;
+            else if(c=='L') endC++;
+            else endC--;
+        }
+        return sb.reverse().toString();
     }
 
     public static void main(String[] args) {
@@ -59,13 +71,4 @@ public class Labyrinth {
 
     }
 }
-class Pair{
-    int r;
-    int c;
-    String s;
-    Pair(int _r,int _c,String _s){
-        r=_r;
-        c=_c;
-        s = _s;
-    }
-}
+
