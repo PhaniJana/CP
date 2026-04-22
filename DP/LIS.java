@@ -1,6 +1,23 @@
 import java.io.*;
 import java.util.*;
-
+public class LIS {
+    public static void main(String[] args) throws IOException {
+        FastReader fs = new FastReader();
+        int n = fs.nextInt();
+        int[] arr = fs.nextIntArray(n);
+        List<Integer> ans = new ArrayList<>();
+        for(int num : arr){
+            if(ans.isEmpty()) ans.add(num);
+            else{
+                int idx = Collections.binarySearch(ans,num);
+                if(idx<0) idx = -idx-1;
+                if(idx==ans.size()) ans.add(num);
+                else ans.set(idx,num);
+            }
+        }
+        System.out.print(ans.size());
+    }
+}
 class FastReader {
     BufferedReader br;
     StringTokenizer st;

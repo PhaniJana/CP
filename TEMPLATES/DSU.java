@@ -1,4 +1,4 @@
-class DSU {
+public class DSU {
     int[] parent, size;
 
     DSU(int n){

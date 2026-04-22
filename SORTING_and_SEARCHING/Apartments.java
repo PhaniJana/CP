@@ -1,7 +1,8 @@
+
 import java.io.*;
 import java.util.*;
 
-class FastReader {
+class FastReader{
     BufferedReader br;
     StringTokenizer st;
 
@@ -63,5 +64,46 @@ class FastReader {
 
     char[] nextCharArray(int n) throws IOException {
         return next().toCharArray(); // assumes no spaces
+    }
+}
+
+public class Apartments {
+    private static int BS(int[] arr,int st,int num){
+        
+        int n = arr.length;
+        int ans = n;
+        int end = n-1;
+        while(st<=end){
+            int mid = st + (end-st)/2;
+            if(arr[mid]>=num){
+                ans = mid;
+                end = mid-1;
+            }
+            else{
+                st = mid+1;
+            }
+        }
+        return ans;
+    }
+    public static void main(String[] args) throws IOException {
+        FastReader fr = new FastReader();
+        int n = fr.nextInt();
+        int m = fr.nextInt();
+        int k = fr.nextInt();
+        int[] applicant = fr.nextIntArray(n);
+        int[] sizes = fr.nextIntArray(m);
+        Arrays.sort(applicant);
+        Arrays.sort(sizes);
+        int st = 0;
+        int count = 0;
+        for(int i=0;i<n;i++) {
+            int idx = BS(sizes,st,applicant[i] - k);
+            if(idx>=m) break;
+            if(Math.abs(applicant[i] - sizes[idx])<=k){
+                count++;
+                st = idx+1;
+            }
+        }
+        System.out.print(count);
     }
 }
