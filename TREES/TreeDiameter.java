@@ -54,6 +54,4 @@ class FastReader {
     int nextInt() throws IOException {
         return Integer.parseInt(next());
     }
-
-    
 }
