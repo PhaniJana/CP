@@ -1,16 +1,42 @@
 import java.io.*;
 import java.util.*;
-
 public class TreeDistancesI {
-    private static void dfs(int node, int par,
-                        List<List<Integer>> edges, int dist,int[] dis){
-    dis[node] = dist;
-
-    for(int child : edges.get(node)){
-        if(child == par) continue;
-        dfs(child, node, edges,dist + 1, dis);
+    private static int dfs1(int node,int par,List<List<Integer>> edges,int[] depths){
+            int depth=0;
+            for(int child : edges.get(node)){
+                if(child==par) continue;
+                depth = Math.max(depth,1 + dfs1(child,node,edges,depths));
+            }
+            return depths[node] = depth;
     }
-}
+    
+    private static void dfs2(int node,int par,List<List<Integer>> edges,int[] depths,int par_ans,int[] ans){
+        
+        List<Integer> prefixMax = new ArrayList<>();
+        List<Integer> suffixMax = new ArrayList<>();
+        for(int child : edges.get(node)){
+            if(child == par) continue;
+            prefixMax.add(depths[child]);
+            suffixMax.add(depths[child]);
+        }
+        int size = prefixMax.size();
+        for(int i=1;i<size;i++) 
+            prefixMax.set(i,Math.max(prefixMax.get(i-1),prefixMax.get(i)));
+        for(int i=size-2;i>=0;i--)
+            suffixMax.set(i,Math.max(suffixMax.get(i+1),suffixMax.get(i)));
+        int c_no = 0; //child number
+        
+        for(int child : edges.get(node)){
+            if(child == par) continue;
+            int op1 = c_no==0 ? -1 : prefixMax.get(c_no-1);
+            int op2 = c_no == size-1 ? -1 : suffixMax.get(c_no+1);
+            int n_par_ans = 1 + Math.max(op1,Math.max(op2,par_ans));
+            dfs2(child,node,edges,depths,n_par_ans,ans);
+            c_no++;
+        }
+        ans[node] = 1 + Math.max(par_ans,size>0 ? prefixMax.get(size-1) : -1);
+        
+    }    
     public static void main(String[] args) throws IOException {
         FastReader sc = new FastReader();
         int n = sc.nextInt();
@@ -22,40 +48,14 @@ public class TreeDistancesI {
             edges.get(u).add(v);
             edges.get(v).add(u);
         }
-        int[] dis1 = new int[n+1];
-        //----------DFS 1 FOR FINDING END POINT1-------------
-        dfs(1,-1,edges,0,dis1);
-        int max=0;
-        int end1=1;
-        for(int i=1;i<=n;i++){
-            if(max<dis1[i]){
-                max = dis1[i];
-                end1 = i;
-            }
-        }
+        int[] depths = new int[n+1];
+        dfs1(1,-1,edges,depths);
+        int[] ans = new int[n+1];
+        dfs2(1,-1,edges,depths,0,ans);
+        for(int i=1;i<=n;i++) System.out.print(ans[i] + " ");
         
-        int[] dis2 = new int[n+1]; //  DIS FROM END POINT 1 TO ALL
-        //----------DFS FOR FINDING END POINT 2--------------
-        dfs(end1,-1,edges,0,dis2);
-        int end2=1;
-        int max1=0;
-        for(int i=1;i<=n;i++){
-            if(max1<dis2[i]){
-                max1 = dis2[i];
-                end2 = i;
-            }
-        }
-        int dis3[] = new int[n+1]; // DIS FROM END POINT 2 TO ALL
-        dfs(end2,-1,edges,0,dis3);
-        StringBuilder ans = new StringBuilder();
-        for(int i=1;i<=n;i++){
-            ans.append(Math.max(dis2[i],dis3[i])).append(" ");   
-        }
-        System.out.print(ans);
     }
 }
-
-
 class FastReader {
     BufferedReader br;
     StringTokenizer st;
@@ -75,48 +75,10 @@ class FastReader {
         return Integer.parseInt(next());
     }
 
-    long nextLong() throws IOException {
-        return Long.parseLong(next());
-    }
-
-    double nextDouble() throws IOException {
-        return Double.parseDouble(next());
-    }
-
-    String nextLine() throws IOException {
-        return br.readLine();
-    }
-
-    char nextChar() throws IOException {
-        return next().charAt(0);
-    }
-
     // -------- Arrays --------
     int[] nextIntArray(int n) throws IOException {
         int[] arr = new int[n];
         for (int i = 0; i < n; i++) arr[i] = nextInt();
         return arr;
-    }
-
-    long[] nextLongArray(int n) throws IOException {
-        long[] arr = new long[n];
-        for (int i = 0; i < n; i++) arr[i] = nextLong();
-        return arr;
-    }
-
-    double[] nextDoubleArray(int n) throws IOException {
-        double[] arr = new double[n];
-        for (int i = 0; i < n; i++) arr[i] = nextDouble();
-        return arr;
-    }
-
-    String[] nextStringArray(int n) throws IOException {
-        String[] arr = new String[n];
-        for (int i = 0; i < n; i++) arr[i] = next();
-        return arr;
-    }
-
-    char[] nextCharArray(int n) throws IOException {
-        return next().toCharArray(); // assumes no spaces
     }
 }
