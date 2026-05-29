@@ -15,8 +15,7 @@ public class TreeMatching {
         dp[node][0] = sum;
         for(int child : edges.get(node)){
             if(child == par) continue;
-            dp[node][1] = Math.max(dp[node][1] , sum - Math.max(dp[child][0],dp[child][1])
-            + dp[child][0] + 1);
+            dp[node][1] = Math.max(dp[node][1] , sum - Math.max(dp[child][0],dp[child][1])+ dp[child][0] + 1);
         }
     }
     public static void main(String[] args) throws IOException {
