@@ -10,7 +10,7 @@ public class TreeMatching {
         int sum=0;
         for(int child : edges.get(node)){
             if(child == par) continue;
-            sum+=Math.max(dp[child][0],dp[child][1]);
+            sum += Math.max(dp[child][0],dp[child][1]);
         }
         dp[node][0] = sum;
         for(int child : edges.get(node)){

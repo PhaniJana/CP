@@ -1,27 +1,28 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 class Monsters {
-    private static String Path(char[][] parent,int endR,int endC,int sR,int sC){
-    StringBuilder ans = new StringBuilder();
-    while(endR!=sR || endC!=sC){
-        char c = parent[endR][endC];
-        ans.append(c);
-        if(c=='D') endR--;
-        else if(c=='U') endR++;
-        else if(c=='R') endC--;
-        else endC++;
+    private static void add(int r,int c,int nr,int nc,char[][] par){
+        if(nr == r && nc == c+1) par[nr][nc] = 'R';
+        else if(nr == r && nc == c-1) par[nr][nc] = 'L';
+        else if(nr == r+1 && nc == c) par[nr][nc] = 'D';
+        else par[nr][nc] = 'U';
     }
-    return ans.reverse().toString();
-}
-    private static char GetDir(int d){
-    switch(d){
-        case 0 : return 'R'; // (0,1)
-        case 1 : return 'L'; // (0,-1)
-        case 2 : return 'D'; // (1,0)
-        case 3 : return 'U'; // (-1,0)
+    private static int[] newRc(int r,int c,char ch){
+        if(ch=='L') return new int[]{r,c+1};
+        if(ch=='R') return new int[]{r,c-1};
+        if(ch=='U') return new int[]{r+1,c};
+        return new int[]{r-1,c}; // D
     }
-    return 'A';
-}
+    private static void getPath(int r,int c,char[][] par,int st,int end){
+        StringBuilder ans = new StringBuilder();
+        while(r!=st || c!=end){
+            ans.append(par[r][c]);
+            int[] a = newRc(r,c,par[r][c]);
+            r = a[0];
+            c = a[1];
+        }
+        System.out.println(ans.reverse());
+    }
     public static void main(String[] args) throws IOException {
         FastReader sc = new FastReader();
         int n = sc.nextInt();
@@ -31,12 +32,12 @@ class Monsters {
         int INF = (int)1e9;
         int[][] monsterTime = new int[n][m];
         boolean[][] vis = new boolean[n][m];
+        char[][] par = new char[n][m];
         for(int[] arr : monsterTime) Arrays.fill(arr,INF);
         Queue<int[]> q = new LinkedList<>();
         Queue<int[]> q1 = new LinkedList<>();
-
+        int ar = -1,ac = -1;
         int[][] dir = {{0,1},{0,-1},{1,0},{-1,0}};
-        int startRow=0,startCol=0;
         for(int i=0;i<n;i++){
             for(int j=0;j<m;j++){
                 if(grid[i].charAt(j)=='M') {
@@ -45,9 +46,9 @@ class Monsters {
                 }
                 if(grid[i].charAt(j)=='A') {
                     vis[i][j] = true;
-                    startRow=i;
-                    startCol=j;
                     q1.add(new int[]{i,j,0});
+                    ar = i;
+                    ac = j;
                 }
             }
         }
@@ -70,18 +71,15 @@ class Monsters {
             }
         }
         
-        
-        char[][] parent = new char[n][m];
         while(!q1.isEmpty()){
             int[] cell = q1.poll();
             int row = cell[0];
             int col = cell[1];
             int dis = cell[2];
-            if((row==n-1 || col==n-1 || row==0 || col==0) && monsterTime[row][col] > dis){
+            if(row==n-1 || col==m-1 || row==0 || col==0) {
                 System.out.println("YES");
-                String ans = Path(parent,row,col,startRow,startCol);
-                System.out.println(ans.length());
-                System.out.println(ans);
+                System.out.println(dis);
+                getPath(row,col,par,ar,ac);
                 return;
             }
             for(int i=0;i<4;i++){
@@ -92,8 +90,8 @@ class Monsters {
                         
                         if(monsterTime[nextRow][nextCol]>dis+1){
                             q1.add(new int[]{nextRow,nextCol,dis+1});
-                            parent[nextRow][nextCol] = GetDir(i);
                             vis[nextRow][nextCol] = true;
+                            add(row,col,nextRow,nextCol,par);
                         }
                     }
                 }
@@ -101,5 +99,70 @@ class Monsters {
         }
         System.out.print("NO");
         
+    }
+}
+
+class FastReader {
+    BufferedReader br;
+    StringTokenizer st;
+
+    FastReader() {
+        br = new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    String next() throws IOException {
+        while (st == null || !st.hasMoreTokens()) {
+            st = new StringTokenizer(br.readLine());
+        }
+        return st.nextToken();
+    }
+
+    int nextInt() throws IOException {
+        return Integer.parseInt(next());
+    }
+
+    long nextLong() throws IOException {
+        return Long.parseLong(next());
+    }
+
+    double nextDouble() throws IOException {
+        return Double.parseDouble(next());
+    }
+
+    String nextLine() throws IOException {
+        return br.readLine();
+    }
+
+    char nextChar() throws IOException {
+        return next().charAt(0);
+    }
+
+    // -------- Arrays --------
+    int[] nextIntArray(int n) throws IOException {
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) arr[i] = nextInt();
+        return arr;
+    }
+
+    long[] nextLongArray(int n) throws IOException {
+        long[] arr = new long[n];
+        for (int i = 0; i < n; i++) arr[i] = nextLong();
+        return arr;
+    }
+
+    double[] nextDoubleArray(int n) throws IOException {
+        double[] arr = new double[n];
+        for (int i = 0; i < n; i++) arr[i] = nextDouble();
+        return arr;
+    }
+
+    String[] nextStringArray(int n) throws IOException {
+        String[] arr = new String[n];
+        for (int i = 0; i < n; i++) arr[i] = next();
+        return arr;
+    }
+
+    char[] nextCharArray(int n) throws IOException {
+        return next().toCharArray(); // assumes no spaces
     }
 }
