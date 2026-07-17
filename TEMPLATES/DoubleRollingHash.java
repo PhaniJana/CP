@@ -5,8 +5,8 @@ class DoubleRollingHash {
     private static final long BASE1 = 911382323L;
     private static final long BASE2 = 972663749L;
 
-    private long[] hash1, hash2;
-    private long[] pow1, pow2;
+    private final long[] hash1, hash2;
+    private final long[] pow1, pow2;
 
     public DoubleRollingHash(int[] arr) {
         int n = arr.length;
