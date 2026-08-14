@@ -11,6 +11,17 @@ public class CompanyQueriesII {
         }
         return node;
     } 
+
+    private static int lca(int u,int v,int[][] dp){
+
+        for(int i=17;i>=0;i--){
+            if(dp[u][i]!=dp[v][i]){
+                u = dp[u][i];
+                v = dp[v][i];
+            }
+        }
+        return dp[u][0];
+    }
     public static void main(String[] args) throws IOException {
         FastReader sc = new FastReader();
         int n = sc.nextInt();
@@ -27,7 +38,6 @@ public class CompanyQueriesII {
                 else dp[i][j] = -1;
             }
         }
-        @SuppressWarnings("unchecked")
         List<List<Integer>> tree = new ArrayList<>();
         for(int i=0;i<=n;i++) tree.add(new ArrayList<>());
         for(int i=2;i<=n;i++){
@@ -54,18 +64,11 @@ public class CompanyQueriesII {
             }
             int reqJump = depth[v] - depth[u];
             v = shift(v,reqJump,dp);
-            int l=0,h = depth[u];
-            int ans=u;
-            while(l<=h){
-                int mid = (l+h)/2;
-                int liftL = shift(u,mid,dp);
-                int liftR = shift(v,mid,dp);
-                if(liftL==liftR){
-                    ans = liftL;
-                    h = mid - 1;
-                }else l = mid + 1;
+            if(u==v) st.append(u).append("\n");
+            else{
+                int ans = lca(u,v,dp);
+                st.append(ans).append("\n");
             }
-            st.append(ans).append("\n");
         }
         System.out.print(st);
     }
