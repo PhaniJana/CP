@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-public class Main{
+public class BinomialCoefficients{
     static class FastReader {
         BufferedReader br;
         StringTokenizer st;
@@ -68,14 +68,40 @@ public class Main{
 
     static final long M = 1_000_000_007L;
     static final long INF = Long.MAX_VALUE;
-    static final long NEG = Long.MIN_VALUE;
+    static long[] fact;
+    static void precompute(){
+        int n = (int)1e6;
+        fact = new long[n+1];
+        fact[0]=1;
+        for(int i=1;i<=n;i++) fact[i] = (fact[i-1]*i) % M;
+    }
+    static long add(long a,long b) {return (a+b)%M;}
+    static long sub(long a,long b) {return (a-b+M)%M;}
+    static long mul(long a,long b) {return (a*b)%M;}
+    static long div(long a,long b) {return (a*pow(b,M-2))%M;}
+    static long pow(long a,long b){
+        if(b==0) return 1;
+        long half = pow(a,b/2);
+        long ans = (half*half)%M;
+        if(b%2==1) ans = (ans * a)%M;
+        return ans;
+    }
+    static long ncr(long n,long r){
+        long num = 1;
+        long den = 1;
+        for(long i=0;i<r;i++){
+            num = mul(num,n-i);
+            den = mul(den,i+1);
+        }
+        return div(num,den);
+    }
     public static void main(String[] args) throws Exception {
         FastReader fs = new FastReader();
         StringBuilder out = new StringBuilder();
 
         int T = 1;
         T = fs.nextInt();
-
+        precompute();
         while (T-- > 0) {
             solve(fs, out);
         }
@@ -84,7 +110,12 @@ public class Main{
     }
 
     static void solve(FastReader sc, StringBuilder out) throws Exception {
-        
+        int a = sc.nextInt();
+        int b = sc.nextInt();
+        long num = fact[a];
+        long den = mul(fact[a-b],fact[b]);
+        long ans = div(num,den);
+        out.append(ans).append("\n");
     }
 
 }

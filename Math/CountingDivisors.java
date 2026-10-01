@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-public class Main{
+public class CountingDivisors{
     static class FastReader {
         BufferedReader br;
         StringTokenizer st;
@@ -68,14 +68,26 @@ public class Main{
 
     static final long M = 1_000_000_007L;
     static final long INF = Long.MAX_VALUE;
-    static final long NEG = Long.MIN_VALUE;
+    static int[] spf;
+    static void precompute(){
+        int n = (int)1e6;
+        spf = new int[n+1];
+        for(int i=0;i<=n;i++) spf[i] = i;
+        for(int i=2;1L*i*i<=n;i++){
+            if(spf[i]==i){
+                for(int j=i*i;j<=n;j+=i){
+                    if(spf[j]==j) spf[j] = i;
+                }
+            }
+        }
+    }
     public static void main(String[] args) throws Exception {
         FastReader fs = new FastReader();
         StringBuilder out = new StringBuilder();
 
         int T = 1;
         T = fs.nextInt();
-
+        precompute();
         while (T-- > 0) {
             solve(fs, out);
         }
@@ -84,7 +96,18 @@ public class Main{
     }
 
     static void solve(FastReader sc, StringBuilder out) throws Exception {
-        
+        int n = sc.nextInt();
+        int ans = 1;
+        while(n!=1){
+            int x = spf[n];
+            int cnt = 0;
+            while(n%x==0) {
+                cnt++;
+                n/=x;
+            }
+            ans *= (cnt+1);
+        }
+        out.append(ans).append("\n");
     }
 
 }

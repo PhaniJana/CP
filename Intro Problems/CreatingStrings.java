@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-public class Main{
+public class CreatingStrings{
     static class FastReader {
         BufferedReader br;
         StringTokenizer st;
@@ -68,13 +68,13 @@ public class Main{
 
     static final long M = 1_000_000_007L;
     static final long INF = Long.MAX_VALUE;
-    static final long NEG = Long.MIN_VALUE;
+
     public static void main(String[] args) throws Exception {
         FastReader fs = new FastReader();
         StringBuilder out = new StringBuilder();
 
         int T = 1;
-        T = fs.nextInt();
+        //T = fs.nextInt();
 
         while (T-- > 0) {
             solve(fs, out);
@@ -82,9 +82,34 @@ public class Main{
 
         System.out.print(out);
     }
-
+    static List<String> ans;
+    static int n;
+    static void solve(int idx,int[] freq,StringBuilder curr){
+        if(idx==n){
+            ans.add(curr.toString());
+            return;
+        }
+        for(int i=0;i<26;i++){
+            if(freq[i]==0) continue;
+            freq[i]--;
+            curr.append((char)(i+'a'));
+            solve(idx+1,freq,curr);
+            curr.deleteCharAt(curr.length()-1);
+            freq[i]++;
+        }
+    }
     static void solve(FastReader sc, StringBuilder out) throws Exception {
-        
+        String s = sc.next();
+        ans = new ArrayList<>();
+        int[] freq = new int[26];
+        n = s.length();
+        for(char c : s.toCharArray()){
+            freq[c-'a']++;
+        }
+        ans = new ArrayList<>();
+        solve(0,freq,new StringBuilder());
+        out.append(ans.size()).append("\n");
+        for(String t : ans) out.append(t).append("\n");
     }
 
 }

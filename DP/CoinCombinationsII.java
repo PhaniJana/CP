@@ -1,29 +1,106 @@
 import java.io.*;
 import java.util.*;
-class CoinCombinationsII {
-    
-    public static void main(String[] args) throws IOException{
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+public class CoinCombinationsII{
+    static class FastReader {
+        BufferedReader br;
+        StringTokenizer st;
 
-        int n = Integer.parseInt(st.nextToken());
-        int target = Integer.parseInt(st.nextToken());
+        FastReader() {
+            br = new BufferedReader(new InputStreamReader(System.in));
+        }
 
-        st = new StringTokenizer(br.readLine());
-        int[] coins = new int[n];
-        for(int i=0;i<n;i++) coins[i] = Integer.parseInt(st.nextToken());
-        int mod = (int)1e9+7;
-        int[] next = new int[target+1];
-        next[0] = 1;
-        for(int idx=n-1;idx>=0;idx--){
-            int[] curr = new int[target+1];
-            curr[0] = 1;
-            for(int x=0;x<=target;x++){
-            int pick = x-coins[idx]>=0 ? curr[x-coins[idx]] : 0;
-                int notPick = next[x];
-                curr[x] = (pick + notPick)%mod;
+        String next() throws IOException {
+            while (st == null || !st.hasMoreTokens()) {
+                st = new StringTokenizer(br.readLine());
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() throws IOException {
+            return Integer.parseInt(next());
+        }
+
+        long nextLong() throws IOException {
+            return Long.parseLong(next());
+        }
+
+        double nextDouble() throws IOException {
+            return Double.parseDouble(next());
+        }
+
+        String nextLine() throws IOException {
+            return br.readLine();
+        }
+
+        char nextChar() throws IOException {
+            return next().charAt(0);
+        }
+
+        // -------- Arrays --------
+        int[] nextIntArray(int n) throws IOException {
+            int[] arr = new int[n];
+            for (int i = 0; i < n; i++) arr[i] = nextInt();
+            return arr;
+        }
+
+        long[] nextLongArray(int n) throws IOException {
+            long[] arr = new long[n];
+            for (int i = 0; i < n; i++) arr[i] = nextLong();
+            return arr;
+        }
+
+        double[] nextDoubleArray(int n) throws IOException {
+            double[] arr = new double[n];
+            for (int i = 0; i < n; i++) arr[i] = nextDouble();
+            return arr;
+        }
+
+        String[] nextStringArray(int n) throws IOException {
+            String[] arr = new String[n];
+            for (int i = 0; i < n; i++) arr[i] = next();
+            return arr;
+        }
+
+        char[] nextCharArray(int n) throws IOException {
+            return next().toCharArray(); // assumes no spaces
+        }
+    }
+
+    static final long M = 1_000_000_007L;
+    static final long INF = Long.MAX_VALUE;
+
+    public static void main(String[] args) throws Exception {
+        FastReader fs = new FastReader();
+        StringBuilder out = new StringBuilder();
+
+        int T = 1;
+        //T = fs.nextInt();
+
+        while (T-- > 0) {
+            solve(fs, out);
+        }
+
+        System.out.print(out);
+    }
+
+    static void solve(FastReader sc, StringBuilder out) throws Exception {
+        int n = sc.nextInt();
+        int x = sc.nextInt();
+        int[] nums = sc.nextIntArray(n);
+        long[] dp = new long[x+1];
+
+        dp[0] = 1;
+        for(int i=0;i<n;i++){
+            for(int j=nums[i];j<=x;j++){
+                dp[j] = (dp[j] + dp[j - nums[i]])%M;
             }
         }
-        System.out.print(next[target]);
+        out.append(dp[x]);
     }
+
 }
+
+
+
+
+

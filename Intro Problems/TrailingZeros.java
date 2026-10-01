@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-public class Main{
+public class TrailingZeros{
     static class FastReader {
         BufferedReader br;
         StringTokenizer st;
@@ -68,13 +68,13 @@ public class Main{
 
     static final long M = 1_000_000_007L;
     static final long INF = Long.MAX_VALUE;
-    static final long NEG = Long.MIN_VALUE;
+
     public static void main(String[] args) throws Exception {
         FastReader fs = new FastReader();
         StringBuilder out = new StringBuilder();
 
         int T = 1;
-        T = fs.nextInt();
+        //T = fs.nextInt();
 
         while (T-- > 0) {
             solve(fs, out);
@@ -84,7 +84,12 @@ public class Main{
     }
 
     static void solve(FastReader sc, StringBuilder out) throws Exception {
-        
+        int n = sc.nextInt();
+        long ans = 0;
+        for(int i=5;i<=n;i*=5){
+            ans += (n/i);
+        }
+        out.append(ans);
     }
 
 }

@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-public class Main{
+public class PlanetsQueriesI{
     static class FastReader {
         BufferedReader br;
         StringTokenizer st;
@@ -68,13 +68,13 @@ public class Main{
 
     static final long M = 1_000_000_007L;
     static final long INF = Long.MAX_VALUE;
-    static final long NEG = Long.MIN_VALUE;
+    static final int LOG = 29;
     public static void main(String[] args) throws Exception {
         FastReader fs = new FastReader();
         StringBuilder out = new StringBuilder();
 
         int T = 1;
-        T = fs.nextInt();
+        //T = fs.nextInt();
 
         while (T-- > 0) {
             solve(fs, out);
@@ -84,7 +84,28 @@ public class Main{
     }
 
     static void solve(FastReader sc, StringBuilder out) throws Exception {
+        int n = sc.nextInt();
+        int q = sc.nextInt();
+        int[][] dp = new int[LOG+1][n+1];
         
-    }
+        for(int i=1;i<=n;i++) dp[0][i] = sc.nextInt();
+        for(int i=1;i<=LOG;i++){
+            for(int j=1;j<=n;j++){
+                dp[i][j] = dp[i-1][dp[i-1][j]];
 
+            }
+        }
+
+        while(q-- > 0){
+            int x = sc.nextInt();
+            int k = sc.nextInt();
+            int ans = x;
+            for(int i=LOG;i>=0;i--){
+                if(((k>>i)&1)!=0){
+                    ans = dp[i][ans];
+                }
+            }
+            out.append(ans).append("\n");
+        }
+    }
 }

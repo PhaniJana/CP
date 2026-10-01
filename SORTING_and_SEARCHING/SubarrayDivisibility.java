@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-public class Main{
+public class SubarrayDivisibility{
     static class FastReader {
         BufferedReader br;
         StringTokenizer st;
@@ -68,13 +68,13 @@ public class Main{
 
     static final long M = 1_000_000_007L;
     static final long INF = Long.MAX_VALUE;
-    static final long NEG = Long.MIN_VALUE;
+
     public static void main(String[] args) throws Exception {
         FastReader fs = new FastReader();
         StringBuilder out = new StringBuilder();
 
         int T = 1;
-        T = fs.nextInt();
+        //T = fs.nextInt();
 
         while (T-- > 0) {
             solve(fs, out);
@@ -84,7 +84,22 @@ public class Main{
     }
 
     static void solve(FastReader sc, StringBuilder out) throws Exception {
-        
+        int n = sc.nextInt();
+        long k = n;
+        long[] nums = sc.nextLongArray(n);
+        long[] prefix = new long[n+1];
+        for(int i=0;i<n;i++) prefix[i+1] = ((prefix[i] + nums[i])%k + k) % k;
+        int mppMax = (int)(n/0.75) + 1;
+        Map<Long,Long> mpp = new HashMap<>(mppMax);
+        long ans=0;
+        for(int i=0;i<=n;i++){
+            long curr = mpp.getOrDefault(prefix[i],0L);
+            ans += curr;
+            mpp.put(prefix[i],curr+1);
+        }
+        out.append(ans);
     }
 
 }
+
+

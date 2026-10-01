@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-public class Main{
+public class CoinPiles{
     static class FastReader {
         BufferedReader br;
         StringTokenizer st;
@@ -68,7 +68,7 @@ public class Main{
 
     static final long M = 1_000_000_007L;
     static final long INF = Long.MAX_VALUE;
-    static final long NEG = Long.MIN_VALUE;
+
     public static void main(String[] args) throws Exception {
         FastReader fs = new FastReader();
         StringBuilder out = new StringBuilder();
@@ -84,7 +84,10 @@ public class Main{
     }
 
     static void solve(FastReader sc, StringBuilder out) throws Exception {
-        
+        long a = sc.nextLong();
+        long b = sc.nextLong();
+        String ans = (a==0 && b==0) || (2L*Math.min(a,b)>=Math.max(a,b) && a!=0 && b!=0 && Math.abs(2L*b - a)%3==0) ? "YES" : "NO";
+        out.append(ans).append("\n");
     }
 
 }
