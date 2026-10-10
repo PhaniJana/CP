@@ -1,74 +1,158 @@
 import java.io.*;
 import java.util.*;
 public class Main{
+    
     static class FastReader {
-        BufferedReader br;
-        StringTokenizer st;
-
+        private final InputStream in = System.in;
+        private final byte[] buffer = new byte[1 << 16];
+        private int ptr = 0;
+        private int len = 0;
+    
         FastReader() {
-            br = new BufferedReader(new InputStreamReader(System.in));
         }
-
-        String next() throws IOException {
-            while (st == null || !st.hasMoreTokens()) {
-                st = new StringTokenizer(br.readLine());
+    
+        private int read() throws IOException {
+            if (ptr >= len) {
+                len = in.read(buffer);
+                ptr = 0;
+    
+                if (len <= 0) {
+                    return -1;
+                }
             }
-            return st.nextToken();
+    
+            return buffer[ptr++];
         }
-
+    
+        String next() throws IOException {
+            int c;
+    
+            do {
+                c = read();
+            } while (c <= ' ' && c != -1);
+    
+            if (c == -1) {
+                return null;
+            }
+    
+            StringBuilder sb = new StringBuilder();
+    
+            while (c > ' ') {
+                sb.append((char) c);
+                c = read();
+            }
+    
+            return sb.toString();
+        }
+    
         int nextInt() throws IOException {
-            return Integer.parseInt(next());
+            return (int) nextLong();
         }
-
+    
         long nextLong() throws IOException {
-            return Long.parseLong(next());
+            int c;
+    
+            do {
+                c = read();
+            } while (c <= ' ' && c != -1);
+    
+            if (c == -1) {
+                throw new EOFException("Unexpected end of input");
+            }
+    
+            long sign = 1;
+    
+            if (c == '-') {
+                sign = -1;
+                c = read();
+            }
+    
+            long value = 0;
+    
+            while (c > ' ') {
+                value = value * 10 + c - '0';
+                c = read();
+            }
+    
+            return value * sign;
         }
-
+    
         double nextDouble() throws IOException {
             return Double.parseDouble(next());
         }
-
+    
         String nextLine() throws IOException {
-            return br.readLine();
+            StringBuilder sb = new StringBuilder();
+            int c = read();
+    
+            if (c == -1) {
+                return null;
+            }
+    
+            while (c != '\n' && c != -1) {
+                if (c != '\r') {
+                    sb.append((char) c);
+                }
+                c = read();
+            }
+    
+            return sb.toString();
         }
-
+    
         char nextChar() throws IOException {
             return next().charAt(0);
         }
-
-        // -------- Arrays --------
+    
         int[] nextIntArray(int n) throws IOException {
             int[] arr = new int[n];
-            for (int i = 0; i < n; i++) arr[i] = nextInt();
+    
+            for (int i = 0; i < n; i++) {
+                arr[i] = nextInt();
+            }
+    
             return arr;
         }
-
+    
         long[] nextLongArray(int n) throws IOException {
             long[] arr = new long[n];
-            for (int i = 0; i < n; i++) arr[i] = nextLong();
+    
+            for (int i = 0; i < n; i++) {
+                arr[i] = nextLong();
+            }
+    
             return arr;
         }
-
+    
         double[] nextDoubleArray(int n) throws IOException {
             double[] arr = new double[n];
-            for (int i = 0; i < n; i++) arr[i] = nextDouble();
+    
+            for (int i = 0; i < n; i++) {
+                arr[i] = nextDouble();
+            }
+    
             return arr;
         }
-
+    
         String[] nextStringArray(int n) throws IOException {
             String[] arr = new String[n];
-            for (int i = 0; i < n; i++) arr[i] = next();
+    
+            for (int i = 0; i < n; i++) {
+                arr[i] = next();
+            }
+    
             return arr;
         }
-
-        char[] nextCharArray(int n) throws IOException {
-            return next().toCharArray(); // assumes no spaces
+    
+        char[] nextCharArray() throws IOException {
+            return next().toCharArray();
         }
     }
+
 
     static final long M = 1_000_000_007L;
     static final long INF = Long.MAX_VALUE;
     static final long NEG = Long.MIN_VALUE;
+
     public static void main(String[] args) throws Exception {
         FastReader fs = new FastReader();
         StringBuilder out = new StringBuilder();
